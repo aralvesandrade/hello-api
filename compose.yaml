@@ -1,0 +1,9 @@
+services:
+  api:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: hello-api
+    restart: always
+    ports:
+      - "5001:5001"
