@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-api
+  labels:
+    app: hello-api
+spec:
+  selector:
+    matchLabels:
+      app: hello-api
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: "hello-api"
+    spec:
+      containers:
+        - name: hello-api
+          image: "aralvesandrade/hello-api"
+
+          resources:
+            requests:
+              cpu: "0.05"
+              memory: 20Mi
+            limits:
+              cpu: "0.05"
+              memory: 25Mi
+
+          # Default values
+          # initialDelaySeconds: 0
+          # timeoutSeconds: 1
+          # periodSeconds: 10
+          # successThreshold: 1
+          # failureThreshold: 3
+
+          startupProbe:
+            httpGet:
+              path: /ping
+              port: 5001
+            periodSeconds: 4
+            failureThreshold: 30
+
+          readinessProbe:
+            httpGet:
+              path: /ping
+              port: 5001
+            periodSeconds: 3
+            failureThreshold: 1
+
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: 5001
+            periodSeconds: 5
+            failureThreshold: 1

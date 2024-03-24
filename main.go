@@ -2,14 +2,28 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
+	"os"
+	"strconv"
 	"time"
 )
 
 func main() {
 	http.HandleFunc("/", helloWorldHandler)
 	http.HandleFunc("/ping", pingHandler)
-	http.ListenAndServe(":5001", nil)
+
+	port, _ := strconv.Atoi(os.Getenv("PORT"))
+	if port == 0 {
+		port = 5001
+	}
+
+	fmt.Printf("Server listening on port %d...", port)
+
+	err := http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
+	if err != nil {
+		log.Fatalf(err.Error())
+	}
 }
 
 func helloWorldHandler(w http.ResponseWriter, r *http.Request) {
