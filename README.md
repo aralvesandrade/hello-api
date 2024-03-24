@@ -8,6 +8,8 @@ kind get clusters
 kubectl config get-clusters
 
 kubectl apply -f k8s/deployment.yaml -f k8s/service.yaml -f k8s/hpa.yaml -f k8s/metrics-server.yaml
+ou
+kubectl apply -f k8s
 kubectl get services
 kubectl port-forward svc/hello-api-service 5001:80
 

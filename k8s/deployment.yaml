@@ -18,6 +18,10 @@ spec:
         - name: hello-api
           image: "aralvesandrade/hello-api"
 
+          env:
+            - name: LOGGING_LEVEL
+              value: "INFO"
+
           resources:
             requests:
               cpu: "0.05"
