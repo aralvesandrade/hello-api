@@ -11,6 +11,10 @@ spec:
   replicas: 1
   template:
     metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: /metrics
+        prometheus.io/port: "5001"
       labels:
         app: "hello-api"
     spec:

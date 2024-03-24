@@ -19,6 +19,9 @@ watch -n1 kubectl get pods
 watch -n1 kubectl get hpa
 
 kubectl apply -f k8s/dashboard.yaml -f k8s/role-dash.yaml
-kubectl proxy
-http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/
+kubectl proxy --port=8002
+http://localhost:8002/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/
+
+kubectl port-forward svc/prometheus-server 9091:80
+
 

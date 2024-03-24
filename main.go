@@ -7,6 +7,8 @@ import (
 	"os"
 	"strconv"
 	"strings"
+
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 func main() {
@@ -18,6 +20,7 @@ func main() {
 
 	http.HandleFunc("/", helloWorldHandler)
 	http.HandleFunc("/ping", pingHandler)
+	http.Handle("/metrics", promhttp.Handler())
 
 	port, _ := strconv.Atoi(os.Getenv("PORT"))
 	if port == 0 {
