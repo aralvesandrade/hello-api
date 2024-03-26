@@ -15,13 +15,19 @@ kubectl port-forward svc/hello-api-service 5001:80
 
 kubectl run -it fortio --rm --image=fortio/fortio -- load -qps 800 -t 120s -c 70 "http://hello-api-service/ping"
 
-watch -n1 kubectl get pods
+watch -n1 kubectl get pods -l app=hello-api
 watch -n1 kubectl get hpa
 
 kubectl apply -f k8s/dashboard.yaml -f k8s/role-dash.yaml
 kubectl proxy --port=8002
 http://localhost:8002/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/
 
-kubectl port-forward svc/prometheus-server 9091:80
+Instalando o Kube-Prometheus
 
+git clone https://github.com/prometheus-operator/kube-prometheus
+cd kube-prometheus
+kubectl create -f manifests/setup
+kubectl apply -f manifests/
+kubectl get pods -n monitoring
+kubectl port-forward -n monitoring svc/grafana 3000
 
