@@ -34,7 +34,7 @@ watch -n1 kubectl get hpa
 
 # Instalando o dashboard do K8s e aplicando permissões para ignorar o uso de token e expor na port 8002
 
-kubectl apply -f k8s/dash/
+kubectl apply -f k8s/dash/dashboard.yaml -f k8s/dash/cluster-role.yaml
 kubectl proxy --port=8002
 http://localhost:8002/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/
 
@@ -45,8 +45,7 @@ cd kube-prometheus
 kubectl create -f manifests/setup
 kubectl apply -f manifests/
 
-kubectl apply -f k8s/grafana
-kubectl rollout restart -n monitoring deployment grafana
+kubectl apply -f k8s/grafana && kubectl rollout restart -n monitoring deployment grafana
 kubectl get pods -n monitoring
 kubectl port-forward -n monitoring svc/grafana 3000
 

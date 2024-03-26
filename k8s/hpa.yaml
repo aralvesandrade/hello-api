@@ -9,4 +9,4 @@ spec:
     kind: Deployment
   minReplicas: 2
   maxReplicas: 10
-  targetCPUUtilizationPercentage: 10
+  targetCPUUtilizationPercentage: 20
