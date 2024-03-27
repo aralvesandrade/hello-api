@@ -79,7 +79,17 @@ for _ in {1..10}; do
   curl ${LB_IP}
 done
 
+# Nginx
+
+kubectl create deployment nginx --image=nginx
+kubectl expose deployment nginx --name nginx-server --type LoadBalancer --port 80 --target-port 80
+ou
+kubectl apply -f k8s/nginx/
+
+kubectl delete deployment nginx && kubectl delete svc nginx-server
+
 # Referencias
 
 https://medium.com/groupon-eng/loadbalancer-services-using-kubernetes-in-docker-kind-694b4207575d
 https://akyriako.medium.com/load-balancing-with-metallb-in-bare-metal-kubernetes-271aab751fb8
+https://medium.com/@JohnxLe/kubernetes-nginx-deployment-using-cli-and-yaml-c517b90af0dc
