@@ -15,14 +15,14 @@ kind create cluster --config=kind/config.yaml --name {name-kind}
 
 kind get clusters
 kubectl config get-clusters
+watch -n1 kubectl top nodes
 
 # Aplicando deploy, services, hpa e metricas
 
-kubectl apply -f k8s/deployment.yaml -f k8s/service.yaml -f k8s/hpa.yaml -f k8s/metrics-server.yaml
-ou
-kubectl apply -f k8s/
+kubectl apply -f k8s/deployment.yaml -f k8s/service.yaml -f k8s/hpa.yaml
+kubectl apply -f k8s/metrics-server.yaml
 
-kubectl get services
+kubectl get svc
 kubectl port-forward svc/hello-api-server 5001:80
 
 # Fazendo um teste de carga fortio 
@@ -31,10 +31,12 @@ kubectl run -it fortio --rm --image=fortio/fortio -- load -qps 800 -t 120s -c 70
 
 watch -n1 kubectl get pods -l app=hello-api
 watch -n1 kubectl get hpa
+watch -n1 kubectl top pods
 
 # Instalando o dashboard do K8s e aplicando permissões para ignorar o uso de token e expor na port 8002
 
 kubectl apply -f k8s/dash/dashboard.yaml -f k8s/dash/cluster-role.yaml
+watch -n1 kubectl get pods -n kubernetes-dashboard
 kubectl proxy --port=8002
 http://localhost:8002/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/
 
@@ -46,7 +48,7 @@ kubectl create -f manifests/setup
 kubectl apply -f manifests/
 
 kubectl apply -f k8s/grafana && kubectl rollout restart -n monitoring deployment grafana
-kubectl get pods -n monitoring
+watch -n1 kubectl get pods -n kubernetes-dashboard
 kubectl port-forward -n monitoring svc/grafana 3000
 
 # Criar deploy, expor como LoadBalancer na porta 8080 e escalar 3 replicas
