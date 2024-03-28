@@ -5,7 +5,7 @@ metadata:
 spec:
   selector:
     app: hello-api
-  type: LoadBalancer
+  type: ClusterIP
   ports:
     - name: hello-api-server
       port: 80
