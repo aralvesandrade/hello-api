@@ -24,7 +24,17 @@ spec:
 
           env:
             - name: LOGGING_LEVEL
-              value: "INFO"
+              value: "DEBUG"
+            # - name: POSTGRES_HOST
+            #   value: "localhost"
+            # - name: POSTGRES_USER
+            #   value: "sonar"
+            # - name: POSTGRES_PASSWORD
+            #   value: "sonar"
+            # - name: POSTGRES_DBNAME
+            #   value: "postgres"
+            # - name: POSTGRES_PORT
+            #   value: "5432"
 
           resources:
             requests:

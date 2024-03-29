@@ -79,10 +79,13 @@ kubectl scale --replicas=5 deployment hello-server
 kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.12.1/manifests/namespace.yaml
 
 kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.12.1/manifests/metallb.yaml
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.13.7/config/manifests/metallb-native.yaml
 
 docker network inspect -f '{{.IPAM.Config}}' kind
 
 kubectl apply -f k8s/metallb/configmap.yaml
+ou
+kubectl apply -f k8s/metallb/configmap2.yaml
 
 LB_IP=$(kubectl get svc/hello-api-server -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
 for _ in {1..10}; do
