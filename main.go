@@ -1,12 +1,16 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"log/slog"
 	"net/http"
 	"os"
 	"strconv"
 	"strings"
+
+	"github.com/jmoiron/sqlx"
+	_ "github.com/lib/pq"
 
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
@@ -17,6 +21,11 @@ func main() {
 		Level: logLevel,
 	}))
 	slog.SetDefault(logger)
+
+	_, err := OpenConn()
+	if err != nil {
+		slog.Error(err.Error())
+	}
 
 	http.HandleFunc("/", helloWorldHandler)
 	http.HandleFunc("/ping", pingHandler)
@@ -29,7 +38,7 @@ func main() {
 
 	slog.Info("server listening", "port", port)
 
-	err := http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
+	err = http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
 	if err != nil {
 		slog.Error(err.Error())
 	}
@@ -61,4 +70,33 @@ func parseLogLevel(logLevel string) slog.Level {
 	default:
 		return slog.LevelInfo
 	}
+}
+
+func OpenConn() (*sql.DB, error) {
+	host := os.Getenv("POSTGRES_HOST")
+	user := os.Getenv("POSTGRES_USER")
+	password := os.Getenv("POSTGRES_PASSWORD")
+	dbName := os.Getenv("POSTGRES_DBNAME")
+
+	port, _ := strconv.Atoi(os.Getenv("POSTGRES_PORT"))
+	if port == 0 {
+		port = 5432
+	}
+
+	conn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbName)
+
+	db, err := sqlx.Open("postgres", conn)
+	if err != nil {
+		return nil, err
+	}
+	defer db.Close()
+
+	err = db.Ping()
+	if err != nil {
+		slog.Error(err.Error())
+	}
+
+	slog.Info("PostgreSQL successfully connected", "port", port)
+
+	return db.DB, err
 }
